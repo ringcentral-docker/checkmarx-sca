@@ -1,0 +1,34 @@
+name: Build checkmarx-sca scanner
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      # '*' matches any character except '/'
+      - 'image/*'
+      - '.github/workflows/*'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dockerfileName: [checkmarx-sca]
+    steps:
+      - uses: actions/checkout@master
+      - name: Docker login
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets. DOCKER_HUB_USERNAME }} 
+          DOCKER_HUB_PASSWORD: ${{ secrets. DOCKER_HUB_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+        run: |
+          echo $DOCKER_HUB_PASSWORD | docker login --username $DOCKER_HUB_USERNAME --password-stdin
+          echo $GITHUB_TOKEN | docker login docker.pkg.github.com --username $GITHUB_ACTOR --password-stdin
+      - name: Build & Push Image
+        run: |
+          cd image
+          IMAGE_NAME=ringcentral/checkmarx-sca
+          VERSION="$(awk -F '[:]'  '/FROM/ {print $2}' Dockerfile.${{ matrix.dockerfileName }})"
+          docker build -t "${IMAGE_NAME}:${{ matrix.dockerfileName }}${VERSION}" -f "Dockerfile.${{ matrix.dockerfileName }}" .
+          docker push "${IMAGE_NAME}:${{ matrix.dockerfileName }}${VERSION}"
