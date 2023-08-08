@@ -3,7 +3,7 @@ name: Build checkmarx-sca scanner
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       # '*' matches any character except '/'
       - 'image/*'
