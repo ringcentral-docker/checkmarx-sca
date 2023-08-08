@@ -1,0 +1,18 @@
+FROM node:18-alpine
+
+WORKDIR app
+RUN apk update && \
+    apk upgrade 
+
+
+RUN apk --no-cache add curl
+
+
+## Add java sdk, cx-flow requires JRE
+RUN apk add openjdk11 --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+
+# Add cx-flow.jar
+RUN curl -L "https://github.com/checkmarx-ltd/cx-flow/releases/download/1.6.41/cx-flow-1.6.41-java11.jar" -o "/app/cx-flow.jar"
+# Add ScaResolver
+RUN curl -L "https://sca-downloads.s3.amazonaws.com/cli/latest/ScaResolver-musl64.tar.gz" -o "ScaResolver.tar.gz" && tar -vxzf ScaResolver.tar.gz &&  mv ScaResolver ImageResolverCli Configuration.yml /app && rm ScaResolver.tar.gz
