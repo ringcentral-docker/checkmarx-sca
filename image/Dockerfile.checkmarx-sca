@@ -16,3 +16,6 @@ ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
 RUN curl -L "https://github.com/checkmarx-ltd/cx-flow/releases/download/1.6.41/cx-flow-1.6.41-java11.jar" -o "/app/cx-flow.jar"
 # Add ScaResolver
 RUN curl -L "https://sca-downloads.s3.amazonaws.com/cli/latest/ScaResolver-musl64.tar.gz" -o "ScaResolver.tar.gz" && tar -vxzf ScaResolver.tar.gz &&  mv ScaResolver ImageResolverCli Configuration.yml /app && rm ScaResolver.tar.gz
+
+# Add yarn
+RUN npm install -g yarn
