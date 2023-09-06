@@ -6,6 +6,7 @@ RUN apk update && \
 
 
 RUN apk --no-cache add curl
+RUN apk --no-cache add bash
 
 # Add yarn and git to ensure checkmarx sca resolver works
 RUN apk --no-cache add yarn
