@@ -8,9 +8,11 @@ RUN apk update && \
 RUN apk --no-cache add curl
 RUN apk --no-cache add bash
 
-# Add yarn and git to ensure checkmarx sca resolver works
-RUN apk --no-cache add yarn
+# Add  git to ensure checkmarx sca resolver works
 RUN apk --no-cache add git
+
+# Enable corepack for newer yarn versions
+RUN corepack enable
 
 ## Add java sdk, cx-flow requires JRE
 RUN apk add openjdk11 --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
